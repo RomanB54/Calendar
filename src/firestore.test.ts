@@ -19,7 +19,7 @@ jest.mock('firebase/firestore', () => ({
   setDoc: jest.fn(),
   deleteDoc: jest.fn(),
 }));
-
+describe('Check all methods of FireStore class', () => {
 test('It provides all documents', async () => {
   const taskData = [
     {
@@ -52,7 +52,7 @@ test('It provides all documents', async () => {
   expect(tasks).toEqual(taskData.map((doc) => doc.data()));
 });
 
-test('create() calls setDoc with correct arguments', async () => {
+it('create() calls setDoc with correct arguments', async () => {
   const mockTask: ICalendarTask = {
     taskId: 'task1',
     name: 'new task1',
@@ -73,7 +73,7 @@ test('create() calls setDoc with correct arguments', async () => {
   expect(setDoc).toHaveBeenCalledWith(mockDocRef, mockTask);
 });
 
-test('filter() returns tasks matching criteria', async () => {
+it('filter() returns tasks matching criteria', async () => {
   const mockData = [
     {
       id: 'task1',
@@ -134,7 +134,7 @@ test('filter() returns tasks matching criteria', async () => {
   ]);
 });
 
-test('delete() removes document by ID', async () => {
+it('delete() removes document by ID', async () => {
   const mockTask: ICalendarTask = {
     taskId: 'task2',
     name: 'new task2',
@@ -154,7 +154,7 @@ test('delete() removes document by ID', async () => {
   expect(doc).toHaveBeenCalledWith({}, 'testCollection', 'task2');
   expect(deleteDoc).toHaveBeenCalledWith(docRef);
 });
-test('update() calls setDoc with correct arguments', async () => {
+it('update() calls setDoc with correct arguments', async () => {
   const mockTask: ICalendarTask = {
     taskId: 'task1',
     name: 'new task1',
@@ -172,4 +172,5 @@ test('update() calls setDoc with correct arguments', async () => {
 
   expect(doc).toHaveBeenCalledWith({}, 'testCollection', 'task1');
   expect(setDoc).toHaveBeenCalledWith(mockDocRef, mockTask, { merge: true });
+});
 });

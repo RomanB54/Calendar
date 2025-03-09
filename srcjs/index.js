@@ -1,30 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const api_1 = require("./api");
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+const api_1 = require('./api');
 const tempCal = new api_1.Calendar(api_1.STORAGES.fireStore);
 const taskOne = {
-    taskId: 'task1',
-    name: 'new task1',
-    date: '2024-12-22 23:23:23',
-    status: 'in progress',
-    tag: 'personal',
-    text: 'work',
+  taskId: 'task1',
+  name: 'new task1',
+  date: '2024-12-22 23:23:23',
+  status: 'in progress',
+  tag: 'personal',
+  text: 'work',
 };
 const taskTwo = {
-    taskId: 'task2',
-    name: 'new task2',
-    date: '2024-12-23 23:23:23',
-    status: 'in progress',
-    tag: 'personal',
-    text: 'work',
+  taskId: 'task2',
+  name: 'new task2',
+  date: '2024-12-23 23:23:23',
+  status: 'in progress',
+  tag: 'personal',
+  text: 'work',
 };
 const taskThree = {
-    taskId: 'task3',
-    name: 'new task2',
-    date: '2024-12-23 23:23:23',
-    status: 'in progress',
-    tag: 'personal',
-    text: 'work',
+  taskId: 'task3',
+  name: 'new task2',
+  date: '2024-12-23 23:23:23',
+  status: 'in progress',
+  tag: 'personal',
+  text: 'work',
 };
 tempCal.create(taskOne);
 const consLog = tempCal.read();

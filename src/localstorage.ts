@@ -43,11 +43,11 @@ export class LocalStorage implements IStorage {
     filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ) {
     const taskList: ICalendarTask[] = await this.read();
-   if (filterOptionKey && filterOptionValue) {
-    return taskList.filter(
-      (task) => task[filterOptionKey] === filterOptionValue,
-    ); 
+    if (filterOptionKey && filterOptionValue) {
+      return taskList.filter(
+        (task) => task[filterOptionKey] === filterOptionValue,
+      );
+    }
+    return [];
   }
-  return [];
-}
 }

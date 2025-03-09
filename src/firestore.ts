@@ -52,7 +52,6 @@ export class FireStore implements IStorage {
   async delete(task: ICalendarTask) {
     const deletedTask = doc(db, this.storeID, task.taskId);
     await deleteDoc(deletedTask);
-
   }
 
   async filter(

@@ -48,6 +48,6 @@
   },
   "lint-staged": {
     "src/**/*.js": "eslint . --fix",
-	  "*.{html,css,js,yml}": "prettier . --write"
-	}
+    "*.{html,css,js,yml}": "prettier . --write"
+  }
 }

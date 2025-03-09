@@ -38,10 +38,16 @@ export class LocalStorage implements IStorage {
     }
     return localStorage.setItem(this.storeID, JSON.stringify(tempData));
   }
-  async filter(filterOptionKey, filterOptionValue) {
+  async filter(
+    filterOptionKey: keyof ICalendarFilter,
+    filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
+  ) {
     const taskList: ICalendarTask[] = await this.read();
+   if (filterOptionKey && filterOptionValue) {
     return taskList.filter(
       (task) => task[filterOptionKey] === filterOptionValue,
-    );
+    ); 
   }
+  return [];
+}
 }

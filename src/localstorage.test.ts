@@ -5,34 +5,34 @@ describe('LocalStorage', () => {
   const localId = 'calendarTasks';
   const storage = new LocalStorage(localId);
   const taskOne: ICalendarTask = {
-    taskId: 1,
+    taskId: 'task1',
     name: 'new task1',
-    date: Date.parse('2024-12-22 23:23:23'),
+    date: '2024-12-22 23:23:23',
     status: 'in progress',
     tag: 'personal',
     text: 'work',
   };
   const taskTwo: ICalendarTask = {
-    taskId: 1234567,
+    taskId: 'task2',
     name: 'new task2',
-    date: Date.parse('2022-08-22 11:11:11'),
+    date: '2022-08-22 11:11:11',
     status: 'in progress',
     tag: 'home',
     text: 'homework',
   };
   const taskThree: ICalendarTask = {
-    taskId: 999999999999,
+    taskId: 'task3',
     name: 'new task3',
-    date: Date.parse('2022-08-22'),
+    date: '2022-08-22',
     status: 'new',
     tag: 'personel',
     text: 'homework 2',
   };
 
   const taskTest: ICalendarTask = {
-    taskId: 1234567,
+    taskId: 'task2',
     name: 'updated task',
-    date: Date.parse('2022-08-23'),
+    date: '2022-08-23',
     status: 'done',
     tag: 'test',
     text: 'do my homework',
@@ -69,14 +69,12 @@ describe('LocalStorage', () => {
   });
 
   it('should filter data by description from localStorage', async () => {
-    const temp = await storage.filter('description', 'do');
-    console.log(temp);
     expect(await storage.filter('text', 'work')).toStrictEqual([taskOne]);
   });
 
   it('should filter data by date from localStorage', async () => {
-    expect(
-      await storage.filter('date', Date.parse('2024-12-22 23:23:23')),
-    ).toStrictEqual([taskOne]);
+    expect(await storage.filter('date', '2024-12-22 23:23:23')).toEqual([
+      taskOne,
+    ]);
   });
 });

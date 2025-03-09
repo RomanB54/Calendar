@@ -1,9 +1,9 @@
 import { LocalStorage } from './localstorage';
-
+import { FireStore } from './firestore';
 export interface ICalendarTask {
-  taskId: number;
+  taskId: string;
   name: string;
-  date: Date;
+  date: string;
   tag: string;
   status: 'new' | 'in progress' | 'done';
   text: string;
@@ -16,6 +16,13 @@ export interface ICalendarFilter {
   status?: 'new' | 'in progress' | 'done';
   text?: string;
 }
+export enum STORAGES {
+  localStorage = 'LocalStorage',
+  fireStore = 'FireStore',
+}
+export interface ICalendar {
+  type: STORAGES;
+}
 
 export interface IStorage {
   create: (task: ICalendarTask) => Promise<void>;
@@ -23,21 +30,23 @@ export interface IStorage {
   update: (task: ICalendarTask) => Promise<void>;
   delete: (task: ICalendarTask) => Promise<void>;
   filter: (
-    filterOptionKey: Partial<ICalendarFilter>,
-    filterOptionValue: Partial<ICalendarFilter>,
+    filterOptionKey: keyof ICalendarFilter,
+    filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ) => Promise<ICalendarTask[] | []>;
 }
 
-export class Calendar implements IStorage {
-  type: 'LocalStorage';
-
+export class Calendar implements IStorage, ICalendar {
+  readonly type: STORAGES;
   private storage: IStorage;
 
   private storeID: string = 'calendarTasks';
 
-  constructor(type: 'LocalStorage') {
+  constructor(type: STORAGES) {
     this.type = type;
-    this.storage = new LocalStorage(this.storeID);
+    this.storage =
+      type === STORAGES.localStorage
+        ? new LocalStorage(this.storeID)
+        : new FireStore(this.storeID);
   }
 
   async create(task: ICalendarTask) {
@@ -52,7 +61,10 @@ export class Calendar implements IStorage {
   async delete(task: ICalendarTask) {
     return this.storage.delete(task);
   }
-  async filter(filterOptionKey, filterOptionValue) {
+  async filter(
+    filterOptionKey: keyof ICalendarFilter,
+    filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
+  ) {
     return this.storage.filter(filterOptionKey, filterOptionValue);
   }
 }

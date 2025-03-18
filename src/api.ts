@@ -10,6 +10,7 @@ export interface ICalendarTask {
 }
 
 export interface ICalendarFilter {
+  taskId?: string;
   date?: Date;
   name?: string;
   tag?: string;
@@ -20,7 +21,7 @@ export enum STORAGES {
   localStorage = 'LocalStorage',
   fireStore = 'FireStore',
 }
-export interface ICalendar {
+export interface ICalendarStorage {
   type: STORAGES;
 }
 
@@ -35,7 +36,7 @@ export interface IStorage {
   ) => Promise<ICalendarTask[] | []>;
 }
 
-export class Calendar implements IStorage, ICalendar {
+export class CalendarAPI implements IStorage, ICalendarStorage {
   readonly type: STORAGES;
   private storage: IStorage;
 

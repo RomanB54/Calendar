@@ -50,4 +50,16 @@ export class LocalStorage implements IStorage {
     }
     return [];
   }
+
+  async getOneTask(taskIdForSearch: string) {
+    const tempData: ICalendarTask[] = await this.read();
+    const newData = tempData.find(
+      (task: ICalendarTask) => task.taskId === taskIdForSearch,
+    );
+    if (!newData) {
+      throw new Error(`Task with ID ${taskIdForSearch} not found`);
+    }
+
+    return newData;
+  }
 }

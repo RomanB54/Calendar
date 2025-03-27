@@ -4,8 +4,11 @@ import {
   getFirestore,
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
+  query,
+  where,
   deleteDoc,
 } from 'firebase/firestore';
 
@@ -58,16 +61,36 @@ export class FireStore implements IStorage {
     filterOptionKey: keyof ICalendarFilter,
     filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ): Promise<ICalendarTask[] | []> {
-    const filteredTasks: ICalendarTask[] = [];
-
-    const snapshot = await getDocs(collection(db, this.storeID));
-    snapshot.docs.forEach((doc) => {
-      const task = doc.data() as ICalendarTask;
-      if (task[filterOptionKey] === filterOptionValue) {
-        filteredTasks.push(task);
+    try {
+      const queryRef = collection(db, this.storeID);
+      const q = query(
+        queryRef,
+        where(filterOptionKey as string, '==', filterOptionValue),
+      );
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log('No matching documents.');
+        return [];
       }
-    });
+      const filteredArray: ICalendarTask[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return data as ICalendarTask;
+      });
+      return filteredArray;
+    } catch (error) {
+      console.log('Error filtering tasks:', error);
+      return [];
+    }
+  }
 
-    return filteredTasks;
+  async getOneTask(taskIdForSearch: string) {
+    const docRef = doc(db, this.storeID, taskIdForSearch);
+    const docSnap = await getDoc(docRef);
+    const parsedSnap = docSnap.data();
+    if (!docSnap || !parsedSnap) {
+      throw new Error(`Task with ID ${taskIdForSearch} not found or empty`);
+    }
+
+    return parsedSnap as ICalendarTask;
   }
 }

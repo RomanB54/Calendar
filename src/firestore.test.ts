@@ -3,23 +3,63 @@ import {
   collection,
   doc,
   getDocs,
+  getDoc,
   setDoc,
+  query,
+  where,
   deleteDoc,
 } from 'firebase/firestore';
 import { ICalendarTask, ICalendarFilter } from './api';
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(() => ({})),
 }));
+jest.mock('firebase/firestore', () => {
+  const mockCollection = jest.fn();
+  const mockWhere = jest.fn();
+  const mockQuery = jest.fn();
+  const mockGetDocs = jest.fn();
+  const mockSetDoc = jest.fn();
+  const mockDeleteDoc = jest.fn();
+  const mockGetDoc = jest.fn();
+  const mockDoc = jest.fn();
 
-jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(() => ({})),
-  collection: jest.fn(),
-  doc: jest.fn(),
-  getDocs: jest.fn(),
-  setDoc: jest.fn(),
-  deleteDoc: jest.fn(),
-}));
+  return {
+    getFirestore: jest.fn(() => ({})),
+    collection: mockCollection,
+    doc: mockDoc,
+    query: mockQuery,
+    where: mockWhere,
+    getDocs: mockGetDocs,
+    setDoc: mockSetDoc,
+    deleteDoc: mockDeleteDoc,
+    getDoc: mockGetDoc,
+  };
+});
+
 describe('Check all methods of FireStore class', () => {
+  let fireStore: FireStore;
+  let mockCollection: jest.Mock;
+  let mockWhere: jest.Mock;
+  let mockQuery: jest.Mock;
+  let mockGetDocs: jest.Mock;
+  let mockSetDoc: jest.Mock;
+  let mockDeleteDoc: jest.Mock;
+  let mockGetDoc: jest.Mock;
+  let mockDoc: jest.Mock;
+
+  beforeEach(() => {
+    fireStore = new FireStore('testCollection');
+    mockCollection = collection as jest.Mock;
+    mockWhere = where as jest.Mock;
+    mockQuery = query as jest.Mock;
+    mockGetDocs = getDocs as jest.Mock;
+    mockSetDoc = setDoc as jest.Mock;
+    mockDeleteDoc = deleteDoc as jest.Mock;
+    mockGetDoc = getDoc as jest.Mock;
+    mockDoc = doc as jest.Mock;
+    jest.clearAllMocks();
+  });
+
   test('It provides all documents', async () => {
     const taskData = [
       {
@@ -45,14 +85,22 @@ describe('Check all methods of FireStore class', () => {
         }),
       },
     ];
-    (getDocs as jest.Mock).mockResolvedValue({ docs: taskData });
-    const fireStore = new FireStore('testCollection');
+
+    const expectedTasks = taskData.map((doc) => doc.data());
+
+    mockGetDocs.mockResolvedValue({
+      docs: taskData.map((task) => ({
+        data: () => task.data(),
+      })),
+    });
+
     const tasks = await fireStore.read();
-    expect(collection).toHaveBeenCalledWith(
+
+    expect(mockCollection).toHaveBeenCalledWith(
       expect.anything(),
       'testCollection',
     );
-    expect(tasks).toEqual(taskData.map((doc) => doc.data()));
+    expect(tasks).toEqual(expectedTasks);
   });
 
   it('create() calls setDoc with correct arguments', async () => {
@@ -65,15 +113,16 @@ describe('Check all methods of FireStore class', () => {
       text: 'work',
     };
     const mockDocRef = { id: 'task1' };
-    (doc as jest.Mock).mockReturnValue(mockDocRef);
-    const fireStore = new FireStore('testCollection');
+    mockDoc.mockReturnValue(mockDocRef);
+
     await fireStore.create(mockTask);
-    expect(doc).toHaveBeenCalledWith(
+
+    expect(mockDoc).toHaveBeenCalledWith(
       expect.anything(),
       'testCollection',
       'task1',
     );
-    expect(setDoc).toHaveBeenCalledWith(mockDocRef, mockTask);
+    expect(mockSetDoc).toHaveBeenCalledWith(mockDocRef, mockTask);
   });
 
   it('filter() returns tasks matching criteria', async () => {
@@ -112,29 +161,25 @@ describe('Check all methods of FireStore class', () => {
         }),
       },
     ];
-    (getDocs as jest.Mock).mockResolvedValue({ docs: mockData });
 
-    const fireStore = new FireStore('testCollection');
+    const FilteredTasks = mockData
+      .map((doc) => doc.data())
+      .filter((task) => task.name === 'new task2');
+
+    mockGetDocs.mockResolvedValue({
+      docs: mockData
+        .filter((doc) => doc.data().name === 'new task2')
+        .map((task) => ({
+          data: () => task.data(),
+        })),
+    });
+
+    mockWhere.mockReturnValue({});
+    mockQuery.mockReturnValue({});
     const filtered = await fireStore.filter('name', 'new task2');
 
-    expect(filtered).toEqual([
-      {
-        taskId: 'task2',
-        name: 'new task2',
-        date: '2024-12-23 22:22:22',
-        status: 'done',
-        tag: 'personal',
-        text: 'home',
-      },
-      {
-        taskId: 'task3',
-        name: 'new task2',
-        date: '2024-12-24 24:24:24',
-        status: 'in progress',
-        tag: 'personal',
-        text: 'home',
-      },
-    ]);
+    expect(mockWhere).toHaveBeenCalledWith('name', '==', 'new task2');
+    expect(filtered).toEqual(FilteredTasks);
   });
 
   it('delete() removes document by ID', async () => {
@@ -146,17 +191,20 @@ describe('Check all methods of FireStore class', () => {
       tag: 'personal',
       text: 'home',
     };
-    const fireStore = new FireStore('testCollection');
-    const collectionRef = { doc: jest.fn() };
-    (collection as jest.Mock).mockReturnValue(collectionRef);
+
     const docRef = { id: 'task2' };
-    (doc as jest.Mock).mockReturnValue(docRef);
+    mockDoc.mockReturnValue(docRef);
 
     await fireStore.delete(mockTask);
 
-    expect(doc).toHaveBeenCalledWith({}, 'testCollection', 'task2');
-    expect(deleteDoc).toHaveBeenCalledWith(docRef);
+    expect(mockDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      'testCollection',
+      'task2',
+    );
+    expect(mockDeleteDoc).toHaveBeenCalledWith(docRef);
   });
+
   it('update() calls setDoc with correct arguments', async () => {
     const mockTask: ICalendarTask = {
       taskId: 'task1',
@@ -168,12 +216,19 @@ describe('Check all methods of FireStore class', () => {
     };
 
     const mockDocRef = { id: 'task1' };
-    (doc as jest.Mock).mockReturnValue(mockDocRef);
+    mockDoc.mockReturnValue(mockDocRef);
 
-    const fireStore = new FireStore('testCollection');
     await fireStore.update(mockTask);
 
-    expect(doc).toHaveBeenCalledWith({}, 'testCollection', 'task1');
-    expect(setDoc).toHaveBeenCalledWith(mockDocRef, mockTask, { merge: true });
+    expect(mockDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      'testCollection',
+      'task1',
+    );
+    expect(mockSetDoc).toHaveBeenCalledWith(
+      mockDocRef,
+      { ...mockTask },
+      { merge: true },
+    );
   });
 });

@@ -77,4 +77,7 @@ describe('LocalStorage', () => {
       taskOne,
     ]);
   });
+  it('should get task by taskId', async () => {
+    expect(await storage.getOneTask('task1')).toStrictEqual(taskOne);
+  });
 });

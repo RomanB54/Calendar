@@ -11,7 +11,7 @@ export interface ICalendarTask {
 
 export interface ICalendarFilter {
   taskId?: string;
-  date?: Date;
+  date?: string;
   name?: string;
   tag?: string;
   status?: 'new' | 'in progress' | 'done';
@@ -34,6 +34,7 @@ export interface IStorage {
     filterOptionKey: keyof ICalendarFilter,
     filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ) => Promise<ICalendarTask[] | []>;
+  getOneTask: (taskId: string) => Promise<ICalendarTask>; 
 }
 
 export class CalendarAPI implements IStorage, ICalendarStorage {
@@ -67,5 +68,8 @@ export class CalendarAPI implements IStorage, ICalendarStorage {
     filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ) {
     return this.storage.filter(filterOptionKey, filterOptionValue);
+  }
+  async getOneTask(taskId: string) {
+    return this.storage.getOneTask(taskId);
   }
 }

@@ -4,9 +4,15 @@
 body {
   font-family: Verdana, sans-serif;
 }
+
 #app {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* 
+.calendarField {
+  grid-column: 2/3;
 }
 
 .taskField .calendarField {
@@ -14,15 +20,12 @@ body {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
   grid-row: 1;
 }
-.taskField {
-  grid-column: 1/2;
-}
 
-.calendarField {
-  grid-column: 2/3;
+.taskField {
+  grid-column: 3/3;
 }
 
 .taskActionType {
@@ -30,11 +33,12 @@ body {
   font-size: 24px;
   font-weight: bold;
 }
+
 .taskParameters {
   padding-left: 20%;
 }
 
-/* Calendar header */
+
 .calendarHeader {
   display: flex;
   justify-content: space-between;
@@ -47,7 +51,7 @@ body {
   font-weight: bold;
 }
 
-/* Navigation buttons */
+
 .prevMonth,
 .nextMonth {
   border: none;
@@ -56,8 +60,9 @@ body {
 
 .prevMonth:hover,
 .nextMonth:hover {
-  color: rgb(2, 7, 6);
+  color: rgb(2 7 6);
 }
+
 ul {
   list-style-type: none;
 }
@@ -71,19 +76,22 @@ ul {
 tbody {
   width: 100%;
 }
+
 td {
   width: 110px;
   text-align: center;
 }
+
 tr {
   height: 40px;
 }
+
 .weekdaysName {
   font-weight: bold;
 }
 
 .normal:hover {
-  background-color: rgb(59, 97, 141);
+  background-color: rgb(59 97 141);
 }
 
 .notCurrentMonth {
@@ -92,7 +100,33 @@ tr {
 
 .today {
   font-weight: 700;
-  color: rgb(218, 27, 27);
+  color: rgb(218 27 27);
   font-size: 1.5em;
 }
+
+.taskEx {
+  background-color: rgb(216 121 58);
+}
+
+.taskListView {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.taskListBox {
+  text-align: center;
+  overflow-y: scroll;
+  height: 500px;
+}
+
+.taskFilterView {
+  text-align: center;
+}
+
+.taskFiltered {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: rgb(58 216 71);
+} */
 

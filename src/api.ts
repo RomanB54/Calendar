@@ -34,7 +34,7 @@ export interface IStorage {
     filterOptionKey: keyof ICalendarFilter,
     filterOptionValue: ICalendarFilter[keyof ICalendarFilter],
   ) => Promise<ICalendarTask[] | []>;
-  getOneTask: (taskId: string) => Promise<ICalendarTask>; 
+  getOneTask: (taskId: string) => Promise<ICalendarTask>;
 }
 
 export class CalendarAPI implements IStorage, ICalendarStorage {

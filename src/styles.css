@@ -7,12 +7,11 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-/* 
-.calendarField {
+.calendar-field {
   grid-column: 2/3;
 }
 
-.taskField .calendarField {
+.task-field .calendar-field {
   margin: auto;
   padding: 20px;
   border: 1px solid #ddd;
@@ -21,42 +20,40 @@ body {
   grid-row: 1;
 }
 
-.taskField {
+.task-field {
   grid-column: 3/3;
 }
 
-.taskActionType {
+.task-action-type {
   text-align: center;
   font-size: 24px;
   font-weight: bold;
 }
 
-.taskParameters {
+.task-parameters {
   padding-left: 20%;
 }
 
-
-.calendarHeader {
+.calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.monthYear {
+.month-year {
   font-size: 24px;
   font-weight: bold;
 }
 
-
-.prevMonth,
-.nextMonth {
+.prev-month,
+.next-month {
   border: none;
   cursor: pointer;
 }
 
-.prevMonth:hover,
-.nextMonth:hover {
+.prev-month:hover,
+.next-month:hover {
   color: rgb(2 7 6);
 }
 
@@ -83,7 +80,7 @@ tr {
   height: 40px;
 }
 
-.weekdaysName {
+.weekdays-name {
   font-weight: bold;
 }
 
@@ -91,7 +88,7 @@ tr {
   background-color: rgb(59 97 141);
 }
 
-.notCurrentMonth {
+.not-current-month {
   color: #c0c0c0;
 }
 
@@ -101,28 +98,28 @@ tr {
   font-size: 1.5em;
 }
 
-.taskEx {
+.task-ex {
   background-color: rgb(216 121 58);
 }
 
-.taskListView {
+.task-list-view {
   text-align: center;
   font-size: 24px;
   font-weight: bold;
 }
 
-.taskListBox {
+.task-list-box {
   text-align: center;
   overflow-y: scroll;
   height: 500px;
 }
 
-.taskFilterView {
+.task-filter-view {
   text-align: center;
 }
 
-.taskFiltered {
+.task-filtered {
   border: 1px solid #ddd;
   border-radius: 10px;
   background-color: rgb(58 216 71);
-} */
+}
